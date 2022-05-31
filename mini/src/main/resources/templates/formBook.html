@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+layout:decorator="template">
+<link rel="stylesheet" type="text/css"
+href="/webjars/bootstrap/4.3.1/css/bootstrap.min.css" />
+
+<head>
+<meta charset="utf-8">
+<title>Ajout des Produits</title>
+</head>
+<body>
+<div layout:fragment="Mycontent">
+<div class="container mt-5">
+<div class="card">
+<div class="card-header" th:if="${mode=='new'}"> Add Book </div>
+<div class="card-header" th:if="${mode=='edit'}">Edit Book </div>
+<div class="card-body">
+<form th:action="@{saveBook}" method="post">
+<div class="form-group">
+<label class="control-label" hidden>Book ID:</label>
+<input type="hidden" name="idBook" class="form-control"
+th:value="${book.idBook}" />
+</div>
+<div class="form-group">
+<label class="control-label">Title :</label>
+<input type="text" name="titleBook" class="form-control" th:value="${book.titleBook}" />
+<span th:errors= ${book.titleBook} class="text-danger"> </span>
+</div>
+<div class="form-group">
+<label class="control-label">Price :</label>
+<input type="text" name="priceBook" class="form-control"
+th:value="${book.priceBook}" />
+<span th:errors= ${book.priceBook} class="text-danger"> </span>
+</div>
+
+
+<div class="form-group">
+<label class="control-label">Year :</label>
+<input type="text" name="year" class="form-control"
+th:value="${book.year}" />
+<span th:errors= ${book.year} class="text-danger"> </span>
+</div>
+<div class="form-group">
+<label class="control-label">Description :</label>
+<input type="text" name="description" class="form-control"
+th:value="${book.description}" />
+<span th:errors= ${book.description} class="text-danger"> </span>
+</div>
+
+
+<div th:if="${mode=='new'}">
+<div class="form-group"> 
+<label class="control-label">author :</label>
+ <select name="author" class="form-control" required>
+ <option th:value="0" selected>-- select author --</option>
+<option th:each="a : ${authors}" th:value="${a.idAuth}" th:text="${a.nameAuth}"></option>
+
+ </select>
+</div>
+</div>
+<div th:if="${mode=='edit'}">
+<div class="form-group"> 
+<label class="control-label">author :</label>
+ <select name="author" class="form-control" required>
+      <option th:value="0" >-- select author --</option>
+      <option th:value="${book.author.idAuth}" th:text="${book.author.nameAuth}" selected></option>
+
+ <option th:each="a:${authors}" th:value="${a.idAuth}" th:text="${a.nameAuth}"></option>
+ </select>
+</div>
+</div>
+<div>
+<button type="submit" class="btn btn-primary">Valider</button>
+</div>
+</form>
+
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

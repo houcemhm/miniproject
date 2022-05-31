@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="template">
+<link rel="stylesheet" type="text/css" href="webjars/bootstrap/4.0.0/css/bootstrab.min.css" />
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<link rel="stylesheet" href="css/style.css">
+	<script src="https://kit.fontawesome.com/43dcc20e7a.js" crossorigin="anonymous"></script>
+	<title>Liste des Produits</title>
+</head>
+
+<body>
+	<div layout:fragment="Mycontent">
+		<div class="container mt-5">
+			<div class="card">
+
+				<div class="card-header" style="justify-content:a;">
+					<div class="row">
+						<div class="col-6 col-sm-4"> Liste </div>
+					</div>
+					<table align='center' width='100%'>
+						<tr>
+							<td>
+								<form class="search-box" name="searchForm" th:action="@{search}" method="GET">
+									</aside>
+									<div th:if="${mode!='SearchAuth'}">
+										<div class="form-group">
+											<label class="control-label">Serarch By Book Title :</label>
+											<input type="search" id="myInput" name='title' class="form-control"
+												placeholder="enter title..."  th:value="${title}"
+												style='border:1px solid #7F8487;border-radius:5px;' />
+										</div>
+									</div>
+									</aside>
+							</td>
+							<th><input th:if="${mode!='SearchAuth'}" class="btn btn-primary" type="submit" value="Search"
+									style='margin-left:30px;margin-top:15px;'></th>
+							</form>
+							<td></td>
+							<td></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td colspan='2'>
+								<form class="search-box" name="searchAuth" th:action="@{searchAuth}" method="GET">
+									</aside>
+
+									<div class="form-group">
+										<label class="control-label">Search by Author :</label>
+										<select name="author" class="form-control" th:if="${!#strings.isEmpty(authors)}"
+											onchange="this.form.submit()" required
+											style='border:1px solid #7F8487;border-radius:5px;'>
+											<option th:value="0" selected>-- select author --</option>
+											<option th:each="a : ${authors}" th:value="${a.idAuth}"
+												th:text="${a.nameAuth}"></option>
+
+										</select>
+
+									</div>
+
+									</aside>
+								</form>
+							</td>
+						</tr>
+					</table>
+					<br>
+					<div class="card-body">
+						<table class="table table-striped" style="text-align: center;">
+							<tr>
+								<th>ID</th>
+								<th>Book Title</th>
+								<th>Prix</th>
+								<th>year</th>
+								<th>Description</th>
+								<th>Author</th>
+								<th>Actions</th>
+								<th></th>
+							</tr>
+							<tr th:each="b:${books.content}">
+								<td th:text="${b.idBook}"></td>
+								<td th:text="${b.titleBook}"></td>
+								<td th:text="${b.priceBook}"></td>
+								<td th:text="${b.year}"></td>
+								<td th:text="${b.description}"></td>
+								<td th:if="${#strings.isEmpty(b.author)}" th:text="no author"></td>
+								<td th:if="${!#strings.isEmpty(b.author)}" th:text="${b.author.nameAuth}"></td>
+
+								<td sec:authorize="hasRole('ADMIN')"><a class="btn btn-danger"
+										onclick="return confirm('Etes-vous sûr ?')" th:href="@{deleteBook(id=${b.idBook},
+                                         page=${currentPage},size=${size})}">Supprimer</a>
+								</td>
+								<td sec:authorize="hasRole('ADMIN')"><a class="btn btn-success"
+										th:href="@{editBook(id=${b.idBook})}">Editer</a>
+								</td>
+							</tr>
+						</table>
+						<div th:if="${mode=='all'}">
+							<ul class="nav nav-pills">
+								<li th:each="page,status:${pages}">
+									<a th:class="${status.index==currentPage?'btn btn-primary':'btn' }"
+										th:href="@{listBooks(page=${status.index}, size=${size} ) }"
+										th:text="${status.index }"></a>
+								</li>
+							</ul>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+</body>
+
+</html>
